@@ -24,7 +24,7 @@ namespace TaskManagementBackend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            var user = await _userRepository.GetByUsernameAsync(model.Username);
+            var user = await _userRepository.GetByUsernameAsync(model.Username,model.Role);
             if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password,user.PasswordHash))
             {
                 return Unauthorized("Invalid Credentials..");
@@ -39,6 +39,40 @@ namespace TaskManagementBackend.Controllers
                 Token = token
             };
             return Ok(response);
+        }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(RegisterModel registerModel)
+        {
+            var existingUser = await _userRepository.GetByUsernameAsync(registerModel.Username,registerModel.Role);
+
+            if(existingUser!=null)
+            {
+                return BadRequest("Username already exists..");
+            }
+
+            var newUser = new User
+            {
+                Username= registerModel.Username,
+                PasswordHash=BCrypt.Net.BCrypt.HashPassword(registerModel.Password),
+                Role= registerModel.Role
+            };
+
+            var result=await _userRepository.CreateUserAsync(newUser);
+            if (!result)
+            {
+                return BadRequest("User Registration failed..");
+            }
+            
+            var response = new RegisterModelDto
+            {
+                Username=newUser.Username,
+                Role=newUser.Role
+            };
+
+
+            return Ok(response);
+
         }
     }
 }

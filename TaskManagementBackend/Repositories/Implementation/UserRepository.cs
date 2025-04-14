@@ -13,9 +13,16 @@ namespace TaskManagementBackend.Repositories.Implementation
         {
                 dbcontext = _dbcontext;
         }
-        public async Task<User> GetByUsernameAsync(string username)
+
+        public async Task<bool> CreateUserAsync(User user)
         {
-            return await dbcontext.Users.SingleOrDefaultAsync(u => u.Username == username);
+            dbcontext.Users.Add(user);
+            return await dbcontext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<User> GetByUsernameAsync(string username,string role)
+        {
+            return await dbcontext.Users.SingleOrDefaultAsync(u => u.Username == username && u.Role==role);
         }
     }
 }
