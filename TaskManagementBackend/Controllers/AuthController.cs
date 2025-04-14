@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementBackend.Models;
+using TaskManagementBackend.Models.DTO;
 using TaskManagementBackend.Repositories.Interface;
 using TaskManagementBackend.Services;
 
@@ -29,7 +31,14 @@ namespace TaskManagementBackend.Controllers
             }
 
             var token = _jwtService.GenerateToken(user);
-            return Ok(new { token });
+
+            var response = new LoginModelDto
+            {
+                Username = user.Username,
+                Password=user.PasswordHash,
+                Token = token
+            };
+            return Ok(response);
         }
     }
 }
