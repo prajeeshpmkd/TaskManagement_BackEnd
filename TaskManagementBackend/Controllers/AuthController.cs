@@ -35,7 +35,7 @@ namespace TaskManagementBackend.Controllers
             var response = new LoginModelDto
             {
                 Username = user.Username,
-                Password=user.PasswordHash,
+                Password = user.PasswordHash,
                 Token = token
             };
             return Ok(response);
