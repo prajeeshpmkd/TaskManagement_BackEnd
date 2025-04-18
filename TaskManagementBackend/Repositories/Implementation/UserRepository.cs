@@ -20,9 +20,9 @@ namespace TaskManagementBackend.Repositories.Implementation
             return await dbcontext.SaveChangesAsync() > 0;
         }
 
-        public async Task<User> GetByUsernameAsync(string username,string role)
+        public async Task<User> GetByUsernameAsync(string username)
         {
-            return await dbcontext.Users.SingleOrDefaultAsync(u => u.Username == username && u.Role==role);
+            return await dbcontext.Users.SingleOrDefaultAsync(u => u.Username == username);
         }
     }
 }

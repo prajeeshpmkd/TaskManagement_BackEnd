@@ -24,7 +24,7 @@ namespace TaskManagementBackend.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            var user = await _userRepository.GetByUsernameAsync(model.Username,model.Role);
+            var user = await _userRepository.GetByUsernameAsync(model.Username);
             if (user == null || !BCrypt.Net.BCrypt.Verify(model.Password,user.PasswordHash))
             {
                 return Unauthorized("Invalid Credentials..");
@@ -44,7 +44,7 @@ namespace TaskManagementBackend.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterModel registerModel)
         {
-            var existingUser = await _userRepository.GetByUsernameAsync(registerModel.Username,registerModel.Role);
+            var existingUser = await _userRepository.GetByUsernameAsync(registerModel.Username);
 
             if(existingUser!=null)
             {
