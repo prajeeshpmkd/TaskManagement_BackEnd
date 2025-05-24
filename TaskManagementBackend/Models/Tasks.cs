@@ -10,6 +10,8 @@ namespace TaskManagementBackend.Models
         public string Description { get; set; }
         public string Status { get; set; }
         public string Priority { get; set; }
+        public DateOnly? Due_date { get; set; }
+        public DateOnly? Completed_date { get; set; }
         public DateTime Creationtimestamp { get; set; }
         public int createdby { get; set; }
 

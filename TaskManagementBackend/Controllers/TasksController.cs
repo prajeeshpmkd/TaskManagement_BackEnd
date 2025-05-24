@@ -42,5 +42,30 @@ namespace TaskManagementBackend.Controllers
 
             return Ok(response);
         }
+
+        [Authorize]
+        [HttpGet("GetAllTasks")]
+        public async Task<ActionResult> GetAllTasks()
+        {
+            var tasks = await taskRepository.GetAllTasksAsync();
+
+            var response=new List<TaskDto>();
+
+            foreach (var task in tasks)
+            {
+                response.Add(new TaskDto
+                {
+                  taskid= task.taskid,
+                  TaskName = task.TaskName,
+                  Description = task.Description,
+                  Status = task.Status,
+                  Priority = task.Priority,
+                  Creationtimestamp = task.Creationtimestamp,
+                  createdby = task.createdby
+                });
+            }
+
+            return Ok(response);
+        }
     }
 }

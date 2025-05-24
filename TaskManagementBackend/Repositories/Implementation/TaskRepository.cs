@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 using TaskManagementBackend.Data;
 using TaskManagementBackend.Models;
 using TaskManagementBackend.Models.DTO;
@@ -45,5 +46,22 @@ namespace TaskManagementBackend.Repositories.Implementation
 
             return Tasks;
         }
+
+        public async Task<List<Tasks>> GetAllTasksAsync()
+        {
+                return await authDbContext.Tasks.Select(t => new Tasks
+                {
+                    taskid = t.taskid,
+                    TaskName = t.TaskName,
+                    Description = t.Description,
+                    Status = t.Status,
+                    Priority=t.Priority,
+                    Due_date=t.Due_date,
+                    Completed_date=t.Completed_date,
+                    Creationtimestamp=t.Creationtimestamp,
+                    createdby=t.createdby
+                }).ToListAsync();
+        }
+
     }
 }
