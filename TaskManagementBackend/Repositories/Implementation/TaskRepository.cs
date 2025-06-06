@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using TaskManagementBackend.Data;
 using TaskManagementBackend.Models;
 using TaskManagementBackend.Models.DTO;
@@ -23,8 +24,12 @@ namespace TaskManagementBackend.Repositories.Implementation
                 Description=createTaskDto.Description,
                 Status= "Open",
                 Priority=createTaskDto.Priority,
-                Creationtimestamp=createTaskDto.Creationtimestamp,
-                createdby=createTaskDto.createdby
+                Due_date=createTaskDto.Due_date,
+                Creationtimestamp =createTaskDto.Creationtimestamp,
+                createdby=createTaskDto.createdby,
+                lastmodifiedby = createTaskDto.createdby,
+                lastmodifiedtimestamp = createTaskDto.Creationtimestamp
+
             };
 
             await authDbContext.Tasks.AddAsync(Tasks);
@@ -63,5 +68,59 @@ namespace TaskManagementBackend.Repositories.Implementation
                 }).ToListAsync();
         }
 
+        public async Task<UpdateTaskResponseDto> UpdateTaskAsync(int taskId, UpdateTaskDto updateTaskDto)
+        {
+            var task =await authDbContext.Tasks.FindAsync(taskId);
+
+            if (task == null)
+            {
+                throw new KeyNotFoundException($"Task with ID {taskId} not found.");
+            }
+            task.Status = updateTaskDto.Status;
+            task.Priority = updateTaskDto.Priority;
+            task.Due_date = updateTaskDto.Due_date;
+            task.Completed_date = updateTaskDto.Completed_date;
+            task.lastmodifiedby = updateTaskDto.lastmodifiedby;
+            task.lastmodifiedtimestamp = updateTaskDto.lastmodifiedtimestamp;
+
+            var Task_Details = new Task_Details
+            {
+                taskid = task.taskid,
+                actiontaken = updateTaskDto.actiontaken,
+                updatedby = updateTaskDto.updatedby,
+                newstatus = updateTaskDto.newstatus,
+                assignedto = updateTaskDto.assignedto,
+                updatedon = updateTaskDto.updatedon,
+                Comments = updateTaskDto.Comments
+            };
+
+            await authDbContext.Task_Details.AddAsync(Task_Details);
+            await authDbContext.SaveChangesAsync(); 
+
+            var updateTaskResponseDto = new UpdateTaskResponseDto
+            {
+                taskid = task.taskid,
+                TaskName = task.TaskName,
+                Description = task.Description,
+                Status = task.Status,
+                Priority = task.Priority,
+                Due_date = task.Due_date,
+                Completed_date = task.Completed_date,
+                Creationtimestamp = task.Creationtimestamp,
+                createdby = task.createdby,
+                lastmodifiedby = updateTaskDto.lastmodifiedby,
+                lastmodifiedtimestamp = updateTaskDto.lastmodifiedtimestamp,
+
+                historyid = Task_Details.historyid,
+                actiontaken = Task_Details.actiontaken,
+                updatedby = Task_Details.updatedby,
+                newstatus = Task_Details.newstatus,
+                assignedto = Task_Details.assignedto,
+                updatedon = Task_Details.updatedon,
+                Comments = Task_Details.Comments
+            };
+            return updateTaskResponseDto;
+
+        }
     }
 }

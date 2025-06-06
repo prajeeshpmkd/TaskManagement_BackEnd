@@ -8,7 +8,7 @@ namespace TaskManagementBackend.Repositories.Interface
         Task<Tasks> CreateTaskAsync(CreateTaskDto createTaskDto);
         Task<List<Tasks>> GetAllTasksAsync();
 
-        //Task<Tasks> UpdateTaskAsync(int taskId,);
+        Task<UpdateTaskResponseDto> UpdateTaskAsync(int taskId,UpdateTaskDto updateTaskDto);
 
     }
 }

@@ -20,9 +20,20 @@ namespace TaskManagementBackend.Repositories.Implementation
             return await dbcontext.SaveChangesAsync() > 0;
         }
 
+        public async Task<List<User>> GetAllUsersAsync()
+        {
+            return await dbcontext.Users.Select(u=> new User
+            {
+                Id = u.Id,
+                Username = u.Username,
+                Role = u.Role
+            }).ToListAsync();
+        }
+
         public async Task<User> GetByUsernameAsync(string username)
         {
             return await dbcontext.Users.SingleOrDefaultAsync(u => u.Username == username);
         }
+
     }
 }

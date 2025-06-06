@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualBasic;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using TaskManagementBackend.Models;
@@ -36,8 +37,11 @@ namespace TaskManagementBackend.Controllers
                 Description = result.Description,
                 Status = result.Status,
                 Priority = result.Priority,
+                Due_date = result.Due_date,
                 Creationtimestamp = result.Creationtimestamp,
-                createdby = createTaskDto.createdby
+                createdby = result.createdby,
+                lastmodifiedby = result.lastmodifiedby,
+                lastmodifiedtimestamp=result.lastmodifiedtimestamp
             };
 
             return Ok(response);
@@ -60,12 +64,34 @@ namespace TaskManagementBackend.Controllers
                   Description = task.Description,
                   Status = task.Status,
                   Priority = task.Priority,
+                  Due_date = task.Due_date,
                   Creationtimestamp = task.Creationtimestamp,
                   createdby = task.createdby
                 });
             }
 
             return Ok(response);
+        }
+
+        [Authorize]
+        [HttpPut("{taskId}")]
+        public async Task<ActionResult> UpdateTaskAsync(int taskId, [FromBody] UpdateTaskDto updateTaskDto)
+        {
+            if (updateTaskDto == null) 
+            {
+                return BadRequest("Invalid request.."); 
+            }
+
+            var result = await taskRepository.UpdateTaskAsync(taskId, updateTaskDto);
+
+            if (result == null)
+            {
+                return NotFound("Task not found.");
+            }
+
+            return Ok(result);
+
+
         }
     }
 }

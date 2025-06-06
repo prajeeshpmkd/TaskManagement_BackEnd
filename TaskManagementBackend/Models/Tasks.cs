@@ -14,7 +14,8 @@ namespace TaskManagementBackend.Models
         public DateOnly? Completed_date { get; set; }
         public DateTime Creationtimestamp { get; set; }
         public int createdby { get; set; }
-
+        public int lastmodifiedby { get; set; }
+        public DateTime lastmodifiedtimestamp { get; set; }
         public virtual User CreatedByNavigation { get; set; }
         public virtual ICollection<Task_Details> TaskDetails { get; set; }
     }
