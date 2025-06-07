@@ -6,7 +6,7 @@ namespace TaskManagementBackend.Repositories.Interface
     {
         Task<User> GetByUsernameAsync(string username);
 
-        Task<bool> CreateUserAsync(User user);
+        Task<User> CreateUserAsync(User user);
 
         Task<List<User>> GetAllUsersAsync();
     }

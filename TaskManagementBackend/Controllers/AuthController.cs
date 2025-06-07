@@ -52,23 +52,25 @@ namespace TaskManagementBackend.Controllers
                 return BadRequest("Username already exists..");
             }
 
-            var newUser = new User
+            var newUser = new User  
             {
                 Username = registerModel.Username,
+                Email=registerModel.Email,
                 PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerModel.Password),
                 Role = registerModel.Role
             };
 
             var result = await _userRepository.CreateUserAsync(newUser);
-            if (!result)
+            if (result==null)
             {
                 return BadRequest("User Registration failed..");
             }
 
             var response = new RegisterModelDto
             {
-                Username = newUser.Username,
-                Role = newUser.Role
+                Id = result.Id,
+                Username = result.Username,
+                Role = result.Role
             };
 
 

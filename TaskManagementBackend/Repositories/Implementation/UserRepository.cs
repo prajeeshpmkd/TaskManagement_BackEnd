@@ -14,10 +14,12 @@ namespace TaskManagementBackend.Repositories.Implementation
                 dbcontext = _dbcontext;
         }
 
-        public async Task<bool> CreateUserAsync(User user)
+        public async Task<User> CreateUserAsync(User user)
         {
             dbcontext.Users.Add(user);
-            return await dbcontext.SaveChangesAsync() > 0;
+            await dbcontext.SaveChangesAsync();
+
+            return user;
         }
 
         public async Task<List<User>> GetAllUsersAsync()
